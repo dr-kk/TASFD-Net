@@ -1,0 +1,37 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# VS Code
+.vscode/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Models
+*.pth
+*.pt
+weights/
+
+# Results
+results/
+
+# Checkpoints
+checkpoints/
+
+# Videos
+*.mp4
+*.avi
+*.mov
+
+# Images
+*.png
+*.jpg
+
+# Logs
+*.log
+
+# Dataset
+datasets/
