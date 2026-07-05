@@ -4,7 +4,7 @@ TASFD-Net
 
 Affinity Propagation Clustering
 
-Author : Dr Krishan Berwal
+Author : Dr. Krishan Berwal
 =========================================================
 """
 
@@ -14,63 +14,74 @@ from sklearn.cluster import AffinityPropagation
 
 class AffinityCluster:
 
-    def __init__(self,
-                 damping=0.90,
-                 preference=None,
-                 random_state=42):
+    def __init__(
+        self,
+        damping=0.90,
+        preference=None,
+        random_state=42
+    ):
 
-        self.model = AffinityPropagation(
-            damping=damping,
-            preference=preference,
-            random_state=random_state
-        )
+        self.damping = damping
+        self.preference = preference
+        self.random_state = random_state
 
     #########################################################
 
-    def fit(self, features):
+    def fit(self, similarity_matrix):
 
-        """
-        Parameters
-        ----------
-        features : ndarray
-            Shape = (N,768)
-        """
+        if self.preference is None:
 
-        self.model.fit(features)
+            # Standard AP initialization
+            preference = np.median(similarity_matrix)
 
-        return self.model.labels_
+        else:
+
+            preference = self.preference
+
+        model = AffinityPropagation(
+
+            affinity="precomputed",
+
+            damping=self.damping,
+
+            preference=preference,
+
+            random_state=self.random_state
+
+        )
+
+        model.fit(similarity_matrix)
+
+        self.labels = model.labels_
+
+        self.centers = model.cluster_centers_indices_
+
+        return self.labels
 
     #########################################################
 
     def cluster_centers(self):
 
-        return self.model.cluster_centers_indices_
+        return self.centers
 
     #########################################################
 
-    def n_clusters(self):
+    def number_of_clusters(self):
 
-        return len(self.model.cluster_centers_indices_)
-
-    #########################################################
-
-    def predict(self, features):
-
-        return self.model.predict(features)
+        return len(self.centers)
 
     #########################################################
 
-    def get_clusters(self, features):
-
-        labels = self.fit(features)
+    def get_cluster_dictionary(self):
 
         clusters = {}
 
-        for i, label in enumerate(labels):
+        for idx, label in enumerate(self.labels):
 
             if label not in clusters:
+
                 clusters[label] = []
 
-            clusters[label].append(i)
+            clusters[label].append(idx)
 
         return clusters
