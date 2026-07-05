@@ -9,6 +9,7 @@ Author : Dr. Krishan Berwal
 """
 
 import numpy as np
+from torch.return_types import topk
 
 
 class SuperframeSelector:
@@ -82,12 +83,23 @@ class SuperframeSelector:
 
             )
 
+        #####################################################
+
+        representatives.sort(
+            key=lambda x: x["score"],
+            reverse=True
+        )
+
         total = len(representatives)
 
+# Always keep at least 5 superframes
         topk = max(
-            1,
-            int(total * summary_ratio)
+            5,
+            min(20, int(total * summary_ratio))
         )
+
+# Don't exceed available representatives
+        topk = min(topk, total)
 
         representatives = representatives[:topk]
 

@@ -1,37 +1,16 @@
-# Python
 __pycache__/
 *.pyc
-*.pyo
-*.pyd
 
-# VS Code
-.vscode/
+results/features/
+results/demo/
+results/summaries/
 
-# Jupyter
-.ipynb_checkpoints/
-
-# Models
-*.pth
-*.pt
-weights/
-
-# Results
-results/
-
-# Checkpoints
 checkpoints/
 
-# Videos
-*.mp4
-*.avi
-*.mov
+*.npy
+*.pth
 
-# Images
-*.png
-*.jpg
+.vscode/
+.idea/
 
-# Logs
-*.log
-
-# Dataset
-datasets/
+.env
