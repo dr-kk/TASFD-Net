@@ -45,7 +45,8 @@ class SuperframeSelector:
             self,
             features,
             cluster_dict,
-            eoe_scores):
+            eoe_scores,
+            summary_ratio=0.15):
 
         representatives = []
 
@@ -80,5 +81,14 @@ class SuperframeSelector:
                 }
 
             )
+
+        total = len(representatives)
+
+        topk = max(
+            1,
+            int(total * summary_ratio)
+        )
+
+        representatives = representatives[:topk]
 
         return representatives

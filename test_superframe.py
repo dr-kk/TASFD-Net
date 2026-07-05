@@ -54,7 +54,8 @@ summary = selector.select(
 
     clusters,
 
-    scores
+    scores, 
+    summary_ratio=0.15
 
 )
 
