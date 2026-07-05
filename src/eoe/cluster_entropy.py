@@ -35,10 +35,15 @@ class ClusterEntropy:
             probabilities = distances + 1e-12
             probabilities = probabilities / probabilities.sum()
 
-            entropy = -np.sum(
-                probabilities *
-                np.log2(probabilities)
+            entropy = float(
+                -np.sum(
+                    probabilities *
+                    np.log2(probabilities)
+                )
             )
+
+            if abs(entropy) < 1e-10:
+                entropy = 0.0
 
             entropy_scores[cluster_id] = entropy
 
