@@ -1,89 +1,53 @@
-"""
-=========================================================
-TASFD-Net
-
-Summary Visualization
-
-Author : Dr. Krishan Berwal
-=========================================================
-"""
-
-import cv2
 import os
+import cv2
 
-VIDEO = "./datasets/Accident/accident1.mp4"
-SUMMARY = "./results/accident1.mp4"
+VIDEO = "./datasets/Accident/v26.mp4"
+SUMMARY = "./results/summaries/v26.mp4"
 
-os.makedirs("./results/figures", exist_ok=True)
+FIGURE_DIR = "./results/figures"
+os.makedirs(FIGURE_DIR, exist_ok=True)
 
-#########################################################
 
-def save_frame(video, frame_no, output):
+def save_frame(video_path, percent, output_name):
 
-    cap = cv2.VideoCapture(video)
+    print(f"\nOpening : {video_path}")
+
+    cap = cv2.VideoCapture(video_path)
+
+    if not cap.isOpened():
+        print("ERROR : Cannot open video")
+        return
+
+    total = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+
+    print("Total Frames :", total)
+
+    frame_no = int(total * percent)
 
     cap.set(cv2.CAP_PROP_POS_FRAMES, frame_no)
 
     ret, frame = cap.read()
 
-    if ret:
+    if not ret:
+        print("ERROR : Cannot read frame", frame_no)
+        cap.release()
+        return
 
-        cv2.imwrite(output, frame)
+    output = os.path.join(FIGURE_DIR, output_name)
+
+    ok = cv2.imwrite(output, frame)
+
+    print("Saved :", ok, output)
 
     cap.release()
 
-#########################################################
 
-cap = cv2.VideoCapture(VIDEO)
+save_frame(VIDEO, 0.25, "original_25.jpg")
+save_frame(VIDEO, 0.50, "original_50.jpg")
+save_frame(VIDEO, 0.75, "original_75.jpg")
 
-frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+save_frame(SUMMARY, 0.25, "summary_25.jpg")
+save_frame(SUMMARY, 0.50, "summary_50.jpg")
+save_frame(SUMMARY, 0.75, "summary_75.jpg")
 
-cap.release()
-
-save_frame(
-    VIDEO,
-    int(frames*0.25),
-    "./results/figures/original_25.jpg"
-)
-
-save_frame(
-    VIDEO,
-    int(frames*0.50),
-    "./results/figures/original_50.jpg"
-)
-
-save_frame(
-    VIDEO,
-    int(frames*0.75),
-    "./results/figures/original_75.jpg"
-)
-
-cap = cv2.VideoCapture(SUMMARY)
-
-frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
-
-cap.release()
-
-save_frame(
-    SUMMARY,
-    int(frames*0.25),
-    "./results/figures/summary_25.jpg"
-)
-
-save_frame(
-    SUMMARY,
-    int(frames*0.50),
-    "./results/figures/summary_50.jpg"
-)
-
-save_frame(
-    SUMMARY,
-    int(frames*0.75),
-    "./results/figures/summary_75.jpg"
-)
-
-print()
-
-print("Figures Saved")
-
-print("./results/figures")
+print("\nDone.")
